@@ -1,6 +1,3 @@
-import sys
-print(sys.path)
-
 
 class Settings:
     def __init__(self):

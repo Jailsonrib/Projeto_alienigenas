@@ -6,8 +6,9 @@ class AlienInvasion:
     def __init__(self):
         '''Inicializa o jogo e cria recursos do jogo'''
         pygame.init()
-        self.screen = pygame.display.set_mode((1200, 800))
         self.clock = pygame.time.Clock()
+        self.settings = Settings()
+        self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
         pygame.display.set_caption('Meu primeiro jogo usando o pygame')
         #Define a cor do background
         self.bg_color = (230, 230, 230)
@@ -21,7 +22,7 @@ class AlienInvasion:
                     #Deixa a tela desenhada mais recente visível
             pygame.display.flip()
             #Redesenha a tela durante cada passagem pelo loop
-            self.screen.fill(self.bg_color)
+            self.screen.fill(self.settings.bg_color)
             self.clock.tick(60)
 if __name__=="__main__":
     #Cria uma instância do jogo e executa o jogo
