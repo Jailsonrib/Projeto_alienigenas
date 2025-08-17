@@ -2,7 +2,7 @@ import sys
 import pygame
 from settings import Settings
 from ship import Ship
-from sprite import Sprite
+from bullet import Bullet
 class AlienInvasion:
     '''Classe geral para gerenciar ativos e comportamentos do jogo'''
     def __init__(self):
@@ -13,6 +13,7 @@ class AlienInvasion:
         self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
         pygame.display.set_caption('Meu primeiro jogo usando o pygame')
         self.ship = Ship(self)
+        self.bullets = pygame.sprite.Group()
         '''self.sprite = Sprite(self)''' #objeto da classe sprite 
         #Define a cor do background
         # self.bg_color = (230, 230, 230)
@@ -22,7 +23,10 @@ class AlienInvasion:
             self._check_events()
             self._update_screen()
             self.ship.update()
-            self.clock.tick(120)
+            
+            self._update_bullet()
+            self.clock.tick(60)
+            
     def _check_events(self):
             #Observa eventos de teclado e mouse
             for event in pygame.event.get():
@@ -49,7 +53,9 @@ class AlienInvasion:
                 self.ship.moving_botton = True
             #Encerra o jogo se o usuário precionar a tecla 'q'
             elif event.key ==pygame.K_ESCAPE:
-                sys.exit()              
+                sys.exit()
+            elif event.key == pygame.K_SPACE:
+                self._fire_bullet()              
     def _check_keyup(self, event):
             '''Responde a teclas soltas'''          
             if event.key == pygame.K_RIGHT:
@@ -61,15 +67,31 @@ class AlienInvasion:
                 self.ship.moving_top = False
             elif event.key == pygame.K_DOWN:
                 self.ship.moving_botton = False
-                   
+           
+    def _fire_bullet(self):
+        """Cria um novo projétil e o adiciona ao grupo projéteis"""
+        if len(self.bullets) < self.settings.bullets_allowed:
+            new_bullet = Bullet(self)
+            self.bullets.add(new_bullet)     
+    def _update_bullet(self):
+        self.bullets.update() 
+        #Descarta os projeteis que desaparecem na borda superior da tela
+        for bullet in self.bullets.copy():
+            if bullet.rect.bottom <= 0:
+                self.bullets.remove(bullet)
+        print(len(self.bullets)) 
+                      
     def _update_screen(self):      
             #Atualiza as imagens na tela e muda para a nova tela
             self.screen.fill(self.settings.bg_color)
+            for bullet in self.bullets.sprites():
+                bullet.draw_bullet()
+            
             self.ship.blitme()
-            '''self.sprite.Intial_game()'''
             #Deixa a tela desenhada mais recente visível
             pygame.display.flip()
-           
+    
+              
 if __name__=="__main__":
     #Cria uma instância do jogo e executa o jogo
     ai = AlienInvasion()
