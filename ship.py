@@ -9,7 +9,7 @@ class Ship:
         self.screen_rect = ai_game.screen.get_rect()
         
         #Sobe a imagem da espaçonave e obtém seu rect
-        self.image = pygame.image.load('images\ship.bmp') # 'rect' significa retângulo 
+        self.image = pygame.image.load('images\ship_recolor.png') # 'rect' significa retângulo 
         
         self.rect = self.image.get_rect()
         

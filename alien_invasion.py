@@ -4,6 +4,7 @@ from settings import Settings
 from ship import Ship
 from bullet import Bullet
 from alien import Alien
+from sprite import Sprite
 class AlienInvasion:
     '''Classe geral para gerenciar ativos e comportamentos do jogo'''
     def __init__(self):
@@ -14,6 +15,7 @@ class AlienInvasion:
         self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
         pygame.display.set_caption('Meu primeiro jogo usando o pygame')
         self.ship = Ship(self)
+        # self.sprite = Sprite(self)
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
         self._create_fleet()
@@ -23,7 +25,7 @@ class AlienInvasion:
             self._check_events()
             self._update_screen()
             self.ship.update()
-            
+           
             self._update_bullet()
             self.clock.tick(60)
             
@@ -83,14 +85,26 @@ class AlienInvasion:
         
     def _create_fleet(self):
         """Cria uma frota de alienígenas."""
+        #Cria um alienigena e continua adicionando alienigenas
+        #Até que não haja espaço suficiente na tela
+        #O distanciamento entre os alienigenas é igual a do proprio alienigena
+        
         alien = Alien(self)
-        self.aliens.add(alien)
+        alien_width = alien.rect.width
+        current_x = alien_width
+        while current_x < (self.settings.screen_width - 1.5 * alien_width):
+            new_alien = Alien(self)
+            new_alien.x = current_x
+            new_alien.rect.x = current_x
+            self.aliens.add(new_alien)
+            current_x += 1.5 * alien_width
+
     def _update_screen(self):      
             #Atualiza as imagens na tela e muda para a nova tela
             self.screen.fill(self.settings.bg_color)
             for bullet in self.bullets.sprites():
                 bullet.draw_bullet()
-            
+            # self.sprite.Intial_game()
             self.ship.blitme()
             self.aliens.draw(self.screen)
             #Deixa a tela desenhada mais recente visível
