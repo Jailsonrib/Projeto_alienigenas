@@ -3,6 +3,7 @@ import pygame
 from settings import Settings
 from ship import Ship
 from bullet import Bullet
+from alien import Alien
 class AlienInvasion:
     '''Classe geral para gerenciar ativos e comportamentos do jogo'''
     def __init__(self):
@@ -14,9 +15,8 @@ class AlienInvasion:
         pygame.display.set_caption('Meu primeiro jogo usando o pygame')
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
-        '''self.sprite = Sprite(self)''' #objeto da classe sprite 
-        #Define a cor do background
-        # self.bg_color = (230, 230, 230)
+        self.aliens = pygame.sprite.Group()
+        self._create_fleet()
     def run_game(self):
         '''inicia o loop principal do jogo'''
         while True:
@@ -72,15 +72,19 @@ class AlienInvasion:
         """Cria um novo projétil e o adiciona ao grupo projéteis"""
         if len(self.bullets) < self.settings.bullets_allowed:
             new_bullet = Bullet(self)
-            self.bullets.add(new_bullet)     
+            self.bullets.add(new_bullet)
+                
     def _update_bullet(self):
         self.bullets.update() 
         #Descarta os projeteis que desaparecem na borda superior da tela
         for bullet in self.bullets.copy():
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
-        print(len(self.bullets)) 
-                      
+        
+    def _create_fleet(self):
+        """Cria uma frota de alienígenas."""
+        alien = Alien(self)
+        self.aliens.add(alien)
     def _update_screen(self):      
             #Atualiza as imagens na tela e muda para a nova tela
             self.screen.fill(self.settings.bg_color)
@@ -88,6 +92,7 @@ class AlienInvasion:
                 bullet.draw_bullet()
             
             self.ship.blitme()
+            self.aliens.draw(self.screen)
             #Deixa a tela desenhada mais recente visível
             pygame.display.flip()
     
