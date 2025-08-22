@@ -15,8 +15,9 @@ class AlienInvasion:
         self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
         pygame.display.set_caption('Meu primeiro jogo usando o pygame')
         self.ship = Ship(self)
-        # self.sprite = Sprite(self)
+        # Cria um grupo de projéteis
         self.bullets = pygame.sprite.Group()
+        # Cria um grupo de alienígenas
         self.aliens = pygame.sprite.Group()
         self._create_fleet()
     def run_game(self):
@@ -25,21 +26,20 @@ class AlienInvasion:
             self._check_events()
             self._update_screen()
             self.ship.update()
-           
             self._update_bullet()
             self.clock.tick(60)
             
     def _check_events(self):
-            #Observa eventos de teclado e mouse
+            # Observa eventos de teclado e mouse
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
                     #Captura eventos das teclas de seta
                 elif event.type == pygame.KEYDOWN:
-                    #Chama o metodo auxiliar que controla teclas pressionadas
+                    # Chama o metodo auxiliar que controla teclas pressionadas
                     self._check_keydown(event)
                 elif event.type == pygame.KEYUP:
-                    #Chama o metodo auxiliar que controla teclas soltas
+                    # Chama o metodo auxiliar que controla teclas soltas
                     self._check_keyup(event)
                      
     def _check_keydown(self, event):
@@ -48,12 +48,12 @@ class AlienInvasion:
                 self.ship.moving_rigth = True
             elif event.key == pygame.K_LEFT:
                 self.ship.moving_left = True
-            #Responde a teclas (cima/baixo) pressionadas  
+            # Responde a teclas (cima/baixo) pressionadas  
             elif event.key == pygame.K_UP:
                 self.ship.moving_top = True
             elif event.key == pygame.K_DOWN:
                 self.ship.moving_botton = True
-            #Encerra o jogo se o usuário precionar a tecla 'q'
+            # Encerra o jogo se o usuário precionar a tecla 'q'
             elif event.key ==pygame.K_ESCAPE:
                 sys.exit()
             elif event.key == pygame.K_SPACE:
@@ -64,7 +64,7 @@ class AlienInvasion:
                 self.ship.moving_rigth = False
             elif event.key == pygame.K_LEFT:
                 self.ship.moving_left = False
-            #Responde a teclas (cima/baixo) soltas    
+            # Responde a teclas (cima/baixo) soltas    
             elif event.key == pygame.K_UP:
                 self.ship.moving_top = False
             elif event.key == pygame.K_DOWN:
@@ -78,10 +78,11 @@ class AlienInvasion:
                 
     def _update_bullet(self):
         self.bullets.update() 
-        #Descarta os projeteis que desaparecem na borda superior da tela
+        # Descarta os projeteis que desaparecem na borda superior da tela
         for bullet in self.bullets.copy():
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
+        
         
     def _create_fleet(self):
         """Cria uma frota de alienígenas."""
@@ -92,12 +93,12 @@ class AlienInvasion:
         alien = Alien(self)
         alien_width = alien.rect.width
         current_x = alien_width
-        while current_x < (self.settings.screen_width - 1.5 * alien_width):
+        while current_x < (self.settings.screen_width - 2 * alien_width):
             new_alien = Alien(self)
             new_alien.x = current_x
             new_alien.rect.x = current_x
             self.aliens.add(new_alien)
-            current_x += 1.5 * alien_width
+            current_x += 3 * alien_width 
 
     def _update_screen(self):      
             #Atualiza as imagens na tela e muda para a nova tela
